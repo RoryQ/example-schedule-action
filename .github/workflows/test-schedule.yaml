@@ -1,0 +1,12 @@
+name: Test Schedule
+
+on:
+  schedule:
+  - cron: "*/3 8 6 6 *"
+  
+jobs:
+  debug:
+    steps:
+    - name: Log
+      shell: bash
+      run: echo ${{ toJson(github) }}
