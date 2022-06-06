@@ -2,10 +2,11 @@ name: Test Schedule
 
 on:
   schedule:
-  - cron: "*/3 8 6 6 *"
+  - cron: "* 8 6 6 *"
   
 jobs:
   debug:
+    runs-on: ubuntu-latest 
     steps:
     - name: Log
       shell: bash
