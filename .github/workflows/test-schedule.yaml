@@ -2,16 +2,26 @@ name: Test Schedule
 
 on:
   schedule:
-  - cron: "0 0 6 6 *"
+  - cron: '0 11 * * 0-4' # 2300 UTC == 0900 AEST
+  - cron: '0 10 * * 0-4' # 2200 UTC == 0900 AEDT
 
 jobs:
-  test_schedule:
+  check-dst:
     runs-on: ubuntu-latest
+    outputs:
+      time: ${{ steps.which_schedule.outputs.time }}
     steps:
-      - name: Not on Monday or Wednesday
-        if: github.event.schedule != '30 5 * * 1,3'
-        run: echo "This step will be skipped on Monday and Wednesday"
-      - name: Every time
-        run: echo "This step will always run"
-      - name: debug
-        run: echo ${{ toJson(github) }}
+    # Will be blank when DST changes
+    - name: Is Expected Schedule
+      id: which_schedule
+      shell: bash
+      run: |
+        echo ::set-output name=time:"$(TZ=Australia/Melbourne date | grep '21:..:..' || true)"
+  
+  action-to-run:
+    runs-on: ubuntu-latest
+    needs: check-dst
+    if: needs.check-dst.outputs.time != ''
+    steps:
+    - name: Action
+      run: echo "this will only run when expected dst cron matches"
