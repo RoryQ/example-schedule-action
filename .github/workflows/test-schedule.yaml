@@ -2,8 +2,8 @@ name: Test Schedule
 
 on:
   schedule:
-  - cron: '0 11 * * 0-4' # 2300 UTC == 0900 AEST
-  - cron: '0 10 * * 0-4' # 2200 UTC == 0900 AEDT
+  - cron: '20 11 * * 0-4' # 2300 UTC == 0900 AEST
+  - cron: '20 10 * * 0-4' # 2200 UTC == 0900 AEDT
 
 jobs:
   check-dst:
@@ -16,7 +16,7 @@ jobs:
       id: which_schedule
       shell: bash
       run: |
-        echo ::set-output name=time:"$(TZ=Australia/Melbourne date | grep '21:..:..' || true)"
+        echo ::set-output name=time::"$(TZ=Australia/Melbourne date | grep '21:..:..' || true)"
   
   action-to-run:
     runs-on: ubuntu-latest
